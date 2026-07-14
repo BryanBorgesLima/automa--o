@@ -204,9 +204,9 @@ def enviar_email(produtos_encontrados):
 
     msg = email.message.Message()
     msg['Subject'] = "Alerta de Monitoramento - Notebooks Amazon"
-    msg['From'] = 'seu_email@gmail.com'
-    msg['To'] = 'seu_email@gmail.com'
-    password = 'sua_senha_de_app_do_google' # Lembre-se de usar "Senha de App" se usar Gmail!
+    msg['From'] = 'seu-email@gmail.com'
+    msg['To'] = 'destinatario@gmail.com'
+    password = 'sua-senha-de-aplicativo' # Use uma Senha de App gerada na sua conta Google
     
     msg.add_header('Content-Type', 'text/html')
     msg.set_payload(corpo_html)
