@@ -172,3 +172,57 @@ except PermissionError:
 
 except Exception as erro:
     print(f"Erro ao salvar o CSV:\n{erro}")
+
+#Mandando email
+
+import smtplib
+import email.message
+# ============================
+# Enviar e-mail com os resultados
+# ============================
+def enviar_email(produtos_encontrados):  
+    # Cria uma lista em HTML com os produtos
+    linhas_tabela = ""
+    for produto in produtos_encontrados:
+        linhas_tabela += f"<tr><td>{produto['Nome']}</td><td><b>{produto['Preço']}</b></td></tr>"
+
+    corpo_html = f"""
+    <html>
+        <body>
+            <h2>Alerta de Preços de Notebooks!</h2>
+            <p>Encontramos os seguintes notebooks dentro da faixa de preço estipulada (R$ 1.300 a R$ 6.000):</p>
+            <table border="1" cellpadding="5" style="border-collapse: collapse;">
+                <tr bgcolor="#f2f2f2">
+                    <th>Produto</th>
+                    <th>Preço</th>
+                </tr>
+                {linhas_tabela}
+            </table>
+        </body>
+    </html>
+    """
+
+    msg = email.message.Message()
+    msg['Subject'] = "Alerta de Monitoramento - Notebooks Amazon"
+    msg['From'] = 'seu_email@gmail.com'
+    msg['To'] = 'seu_email@gmail.com'
+    password = 'sua_senha_de_app_do_google' # Lembre-se de usar "Senha de App" se usar Gmail!
+    
+    msg.add_header('Content-Type', 'text/html')
+    msg.set_payload(corpo_html)
+
+    try:
+        s = smtplib.SMTP('smtp.gmail.com: 587')
+        s.starttls()
+        s.login(msg['From'], password)
+        s.sendmail(msg['From'], [msg['To']], msg.as_string().encode('utf-8'))
+        s.quit()
+        print('E-mail enviado com sucesso!')
+    except Exception as e:
+        print(f"Falha ao enviar e-mail: {e}")
+
+# Chamar a função após salvar o CSV (apenas se houver dados)
+if dados:
+    enviar_email(dados)
+
+print("Finalizado")
